@@ -1,24 +1,24 @@
-# This is a template for a Python scraper on morph.io (https://morph.io)
-# including some code snippets below that you should find helpful
+import scraperwiki
+import simplejson
+import urllib2
+from scraperwiki import swimport
 
-# import scraperwiki
-# import lxml.html
-#
-# # Read in a page
-# html = scraperwiki.scrape("http://foo.com")
-#
-# # Find something on the page using css selectors
-# root = lxml.html.fromstring(html)
-# root.cssselect("div[align='left']")
-#
-# # Write out to the sqlite database using scraperwiki library
-# scraperwiki.sqlite.save(unique_keys=['name'], data={"name": "susan", "occupation": "software developer"})
-#
-# # An arbitrary query against the database
-# scraperwiki.sql.select("* from data where 'name'='peter'")
+myfollowers = []
+twitter_handle = 'hanyoon'
 
-# You don't have to do things with the ScraperWiki and lxml libraries.
-# You can use whatever libraries you want: https://morph.io/documentation/python
-# All that matters is that your final data is written to an SQLite database
-# called "data.sqlite" in the current working directory which has at least a table
-# called "data".
+base_url = 'https://api.twitter.com/1/followers/ids.json?cursor=-1&screen_name=' + twitter_handle 
+results_json = simplejson.loads(scraperwiki.scrape(base_url))
+myfollowers = results_json['ids']
+myfollowers_str = map(str, myfollowers) 
+
+
+
+swimport('twitter_bulk_users_lookup').bulklookup(myfollowers_str)
+
+
+'''
+See https://scraperwiki.com/scrapers/twitter_bulk_users_lookup/ for the code for the script
+
+Still to do
+-add parameter for ID and username (usertype)
+'''
